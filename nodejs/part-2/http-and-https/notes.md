@@ -6,4 +6,3 @@ protocol - rules
 HTTP - protocol 
  - yahi protocaol hai ya  rule ha jisko follow kare bina aap internet pe naa hi kuchh bhej sakte ho , naa hi kuchh bhej sakte ho , naa hi kuchh manga sakte ho 
 
-nodejs\part-2\http-and-https\script.js
