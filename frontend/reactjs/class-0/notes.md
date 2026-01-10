@@ -370,3 +370,224 @@ const element = <h1>Hello, {name}!</h1>;
 * Combines UI structure and logic in one place
 * Protects applications from Cross-Site Scripting (XSS) attacks
 * Helps in writing maintainable and structured code
+
+# Chapter 5: Components in React
+
+## 5.1 Meaning of Components
+
+A component is a small, independent, and reusable part of the user interface.
+A React application is composed of multiple components that work together to form a complete UI.
+
+## 5.2 Types of Components
+
+### 5.2.1 Functional Components
+
+Functional components are simple JavaScript functions that return JSX.
+
+- Characteristics:
+
+* Easy to write and understand
+* Widely used in modern React
+* Support Hooks for state and lifecycle management
+* Recommended approach in current React development
+
+### 5.2.2 Class Components (Traditional)
+
+Class components are written using ES6 classes.
+
+- Characteristics:
+
+* Use lifecycle methods
+* More complex syntax
+* Mostly replaced by functional components with Hooks
+* Rarely used in modern applications
+
+
+# Chapter 6: Understanding Props 
+
+## 6.1 Introduction
+
+In React.js, props are used to pass data from one component to another.
+The word props stands for properties.
+Props make React components reusable, dynamic, and flexible.
+
+Props are passed from parent component to child component.
+
+## 6.2 What are Props?
+
+* Props are read-only data
+* They are passed as attributes to components
+* A component cannot change its own props
+* Props help components communicate with each other
+
+- Important: Props flow in one direction only (parent → child).
+
+## 6.3 Why are Props Needed?
+
+Props are needed to:
+
+* Reuse components with different data
+* Display dynamic content
+* Maintain clean and modular code
+* Avoid repetition of components
+
+## 6.4 Passing Props to a Component
+
+### Step 1: Parent Component
+
+```jsx
+function App() {
+  return (
+    <div>
+      <Student name="Rahul" age="20" />
+      <Student name="Anjali" age="22" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Explanation:
+
+* `Student` is a child component
+* `name` and `age` are props
+* Different values are passed to the same component
+
+### Step 2: Child Component
+
+```jsx
+function Student(props) {
+  return (
+    <div>
+      <h2>Name: {props.name}</h2>
+      <p>Age: {props.age}</p>
+    </div>
+  );
+}
+
+export default Student;
+```
+
+### Explanation:
+
+* `props` is an object
+* Props are accessed using `props.propertyName`
+* Values are displayed dynamically
+
+## 6.5 Props Using Destructuring
+
+Destructuring makes the code shorter and cleaner.
+
+```jsx
+function Student({ name, age }) {
+  return (
+    <div>
+      <h2>Name: {name}</h2>
+      <p>Age: {age}</p>
+    </div>
+  );
+}
+```
+
+### Advantages:
+
+* Clean syntax
+* Easy to read
+* No need to write `props.` repeatedly
+
+## 6.6 Props are Read-Only
+
+Props cannot be modified inside the child component.
+
+- Wrong Example:
+
+```jsx
+props.name = "Amit";
+```
+
+- Correct Concept:
+
+* Props are immutable
+* Only parent components can change data
+
+## 6.7 Passing Different Types of Props
+
+### String Props
+
+```jsx
+<User name="Bharat" />
+```
+
+### Number Props
+
+```jsx
+<User age={21} />
+```
+
+### Boolean Props
+
+```jsx
+<User isStudent={true} />
+```
+
+### Array Props
+
+```jsx
+<User skills={["HTML", "CSS", "React"]} />
+```
+
+### Object Props
+
+```jsx
+<User info={{ city: "Jaipur", course: "CSE" }} />
+```
+
+## 6.8 Props with Functions
+
+Functions can also be passed as props.
+
+### Parent Component
+
+```jsx
+function App() {
+  function greet() {
+    alert("Hello Student");
+  }
+
+  return <Button clickHandler={greet} />;
+}
+```
+
+### Child Component
+
+```jsx
+function Button({ clickHandler }) {
+  return <button onClick={clickHandler}>Click Me</button>;
+}
+```
+
+## 6.9 Default Props
+
+Default props are used when no value is passed.
+
+```jsx
+function Profile({ name = "Guest" }) {
+  return <h1>Welcome, {name}</h1>;
+}
+```
+
+## 6.10 Props vs State (Basic Difference)
+
+| Props                 | State                    |
+| --------------------- | ------------------------ |
+| Passed from parent    | Managed inside component |
+| Read-only             | Can be changed           |
+| Used for data sharing | Used for component data  |
+
+## 6.11 Advantages of Props
+
+* Makes components reusable
+* Improves code readability
+* Enables component communication
+* Helps build dynamic UI
