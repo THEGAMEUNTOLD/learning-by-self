@@ -1,20 +1,12 @@
 import React from 'react'
 
 const HeroText = () => {
-  return (
-    <div>
-        <div class='p-6 '>
-                <h3 class="mb-7 flex flex-col leading-1.1 text-4xl font-bold">
-                    <span>Prospective</span>
-                    <span class="text-gray-500">customer</span>
-                    <span>segmentation</span>
-                </h3>
-                <p class=' font-medium text-gray-500'>
-                    depending on customer satisfaction and access to banking product, potentail target audience can be divided into three groups
-                </p>
-            </div>
-    </div>
-  )
+    return (
+        <div className='p-6'>
+            <h3 className='mb-7 text-3xl font-bold'>Prospective <br /><span >customer</span> <br />segmentation</h3>
+            <p className=' w-[90%] font-medium text-gray-600'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias doloremque perspiciatis cumque, eveniet recusandae a laborum vero! Aperiam, at culpa.</p>
+        </div>
+    )
 }
 
 export default HeroText
