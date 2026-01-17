@@ -224,7 +224,7 @@ useEffect(() => {
 
 
 
-# ### `useEffect` Hook in React.js
+# `useEffect` Hook in React.js
 
 - The `useEffect` hook is a fundamental feature in React that allows a functional component to perform side effects. Side effects are operations that interact with the outside world or occur after rendering, such as fetching data from an API, manipulating the DOM, setting up subscriptions, or using timers.
 
