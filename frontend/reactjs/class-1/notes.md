@@ -94,3 +94,6 @@ Open `src/index.css` and add this line at the top:
 * This line loads all Tailwind utility classes into the project.
 * Without this import, Tailwind CSS will not work.
 * After this step, Tailwind is ready to be used in any React component.
+
+
+# UI Design Project

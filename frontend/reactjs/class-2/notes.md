@@ -1029,3 +1029,313 @@ export default Form;
 * Never directly modify the state
 
 
+# project-2 -> Notes App Project
+
+##  CHAPTER 1: What Are We Building?
+
+We are building a Notes App using:
+
+* React → to build the UI
+* Tailwind CSS → to style the UI
+* useState → to store notes in memory
+
+### App Features
+
+1. Add a note (title + details)
+2. Show all notes
+3. Delete a note
+
+##  CHAPTER 2: Create the React Project
+
+### Step 1: Create project using Vite (recommended)
+
+Open terminal and run:
+
+```bash
+npm create vite@latest notes-app
+```
+
+Choose:
+
+* Framework → React
+* Variant → JavaScript
+
+Then:
+
+```bash
+cd notes-app
+npm install
+npm run dev
+```
+
+-> Now React is running in the browser.
+
+##  CHAPTER 3: Install Tailwind CSS
+
+### Step 2: Install Tailwind
+
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+This creates:
+
+* `tailwind.config.js`
+* `postcss.config.js`
+
+---
+
+### Step 3: Configure Tailwind
+
+Open tailwind.config.js
+
+```js
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx}"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+- Explanation
+This tells Tailwind:
+
+> “Scan these files and generate only the CSS classes used here.”
+
+---
+
+### Step 4: Add Tailwind to CSS
+
+Open src/index.css
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+- Explanation
+
+* `base` → browser reset
+* `components` → reusable styles
+* `utilities` → classes like `bg-black`, `p-5`, etc.
+
+##  CHAPTER 4: Clean the Project
+
+Delete:
+
+* `App.css`
+* `assets/react.svg`
+
+Edit main.jsx
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+```
+
+- Explanation
+
+* React loads `<App />` inside `#root`
+* `StrictMode` helps catch mistakes
+
+
+##  CHAPTER 5: Understanding App.jsx (Heart of App)
+
+Open src/App.jsx
+
+```jsx
+import { useState } from 'react'
+```
+
+- Explanation
+
+* `useState` is a React Hook
+* It lets us store and update data
+
+
+### Step 5.1: Create Component
+
+```jsx
+const App = () => {
+```
+
+- Explanation
+
+* `App` is a function component
+* React shows whatever this function returns
+
+
+### Step 5.2: Create State Variables
+
+```jsx
+const [title, setTitle] = useState('')
+const [details, setDetails] = useState('')
+const [tasks, setTasks] = useState([])
+```
+
+- Explanation
+
+| State   | Meaning                     |
+| ------- | --------------------------- |
+| title   | Text entered in title input |
+| details | Text entered in textarea    |
+| tasks   | Array that stores all notes |
+
+Example:
+
+```js
+tasks = [
+  { title: "Study", details: "React hooks" }
+]
+```
+
+---
+
+##  CHAPTER 6: Add Note Logic
+
+```jsx
+const submitHandler = (e) => {
+  e.preventDefault()
+```
+
+- Explanation
+
+* Prevents page reload on form submit
+
+---
+
+```jsx
+const newTask = { title, details }
+```
+
+- Explanation
+
+* Create a new note object
+
+---
+
+```jsx
+setTasks([...tasks, newTask])
+```
+
+Explanation
+
+* `...tasks` copies old notes
+* Adds new note at the end
+* React state must never be modified directly
+
+---
+
+```jsx
+setTitle('')
+setDetails('')
+```
+
+- Explanation
+
+* Clears input fields after submission
+
+##  CHAPTER 7: Delete Note Logic
+
+```jsx
+const deleteNote = (index) => {
+  const copy = [...tasks]
+  copy.splice(index, 1)
+  setTasks(copy)
+}
+```
+
+- Explanation
+
+* Make a copy of array
+* Remove note using index
+* Update state with new array
+
+##  CHAPTER 8: JSX Layout (UI)
+
+```jsx
+return (
+  <div className="min-h-screen bg-black text-white flex">
+```
+- Explanation
+
+* `min-h-screen` → full height
+* `bg-black` → background color
+* `flex` → horizontal layout
+
+---
+
+### Form Section
+
+```jsx
+<form onSubmit={submitHandler}>
+```
+
+- Explanation
+
+* Calls `submitHandler` when form submits
+
+---
+
+### Input (Controlled Component)
+
+```jsx
+<input
+  value={title}
+  onChange={(e) => setTitle(e.target.value)}
+/>
+```
+
+- Explanation
+
+* React controls input value
+* Every key press updates state
+
+---
+
+### Textarea
+
+```jsx
+<textarea
+  value={details}
+  onChange={(e) => setDetails(e.target.value)}
+/>
+```
+
+ Same logic as input
+
+##  CHAPTER 9: Display Notes
+
+```jsx
+{tasks.map((task, index) => (
+```
+
+- Explanation
+
+* Loops through notes array
+* Creates UI for each note
+
+---
+
+```jsx
+<button onClick={() => deleteNote(index)}>
+```
+
+- Explanation
+
+* Deletes that specific note

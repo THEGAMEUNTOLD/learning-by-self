@@ -591,3 +591,6 @@ function Profile({ name = "Guest" }) {
 * Improves code readability
 * Enables component communication
 * Helps build dynamic UI
+
+#  Mini Projects using Props name = "zero"
+
