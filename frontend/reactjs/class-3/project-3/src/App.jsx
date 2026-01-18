@@ -26,7 +26,7 @@ const App = () => {
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black text-white">
+    <div className="min-h-screen bg-gray-600 from-black via-zinc-900 to-black text-white">
       {/* Header */}
       <header className="sticky top-0 z-10 backdrop-blur bg-black/60 border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
