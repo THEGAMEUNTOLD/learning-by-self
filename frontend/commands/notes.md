@@ -1,5 +1,8 @@
 # reactjs terminal command 
 
+-> npm init -y
+
+
 1.  npm create vite  ->
 │
 ◇  Project name:
