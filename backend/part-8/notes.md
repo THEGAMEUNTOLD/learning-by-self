@@ -193,7 +193,7 @@ console.log(data);
 
 
 
--> **MINI PROJECT 1** - How to Set and Read Cookies in Express.js
+-> MINI PROJECT 1 - How to Set and Read Cookies in Express.js
 
 Steps 
 Step 1: Initialize Project

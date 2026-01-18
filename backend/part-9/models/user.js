@@ -4,9 +4,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/authtestapp")
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: String,
-    email: String,
+    email: { type: String, unique: true },
     password: String,
     age: Number
 });

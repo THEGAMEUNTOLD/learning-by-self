@@ -1,251 +1,355 @@
-# Authentication & Authorization using JWT, MongoDB, and Express
+# User Authentication & Dashboard System
 
-## Chapter 1: Introduction
+We will build a user registration, login, dashboard, edit profile, and logout system.
 
-Modern web applications require a secure system to identify users and control access to protected resources.
-This process is achieved using Authentication and Authorization.
+Tech stack:
 
-In this project, we implement:
+* Node.js + Express → Backend server
+* MongoDB → Database
+* EJS → Templating engine (HTML + JS)
+* TailwindCSS → Styling
+* JWT + Cookies → Authentication
+* bcrypt → Password hashing
 
-* User Registration
-* User Login
-* Password Hashing
-* JWT-based Authentication
-* Cookie-based Session Handling
-* Protected Dashboard Access
+## Step 1: Setup Project
 
-## Chapter 2: Key Concepts
+1. Open Terminal in your desired folder.
+2. Create a project folder:
 
-### 2.1 Authentication
+   ```bash
+   mkdir part-9
+   cd part-9
+   ```
+3. Initialize a Node.js project:
 
-Authentication is the process of verifying the identity of a user
+   ```bash
+   npm init -y
+   ```
 
-Example:
+   * This creates `package.json`, which tracks dependencies and scripts.
 
-> Checking whether a user exists and whether the password is correct.
+---
 
-### 2.2 Authorization
+## Step 2: Install Dependencies
 
-Authorization is the process of deciding what an authenticated user is allowed to do.
+We need these packages:
 
-Example:
+* express → backend framework
+* ejs → template engine
+* mongoose → MongoDB ORM
+* bcrypt → password hashing
+* jsonwebtoken → JWT for authentication
+* cookie-parser → parse cookies in requests
 
-> Allowing only logged-in users to access the dashboard.
-
-
-### 2.3 JWT (JSON Web Token)
-
-A JWT is a secure token that stores user information in encrypted form.
-
-* Generated after login
-* Stored in cookies
-* Sent automatically with every request
-* Used to identify the user without storing sessions on the server
-
-
-## Chapter 3: Project Setup
-
-### 3.1 Installed Packages
+Run:
 
 ```bash
-npm init -y
-npm i express mongoose bcrypt jsonwebtoken cookie-parser ejs
+npm i express ejs mongoose bcrypt jsonwebtoken cookie-parser
 ```
 
-#### Purpose of Each Package
+Optional: for dev purposes:
 
-| Package       | Purpose                       |
-| ------------- | ----------------------------- |
-| express       | Server framework              |
-| mongoose      | MongoDB ODM                   |
-| bcrypt        | Password hashing              |
-| jsonwebtoken  | Token creation & verification |
-| cookie-parser | Read cookies                  |
-| ejs           | Server-side templates         |
+```bash
+npm i nodemon --save-dev
+```
 
+* nodemon restarts server automatically when you change code.
 
-## Chapter 4: Folder Structure (Correct Organization)
+---
+
+## Step 3: Create Folder Structure
+
+Inside your project folder:
 
 ```
-project-root/
+auth-app/
 │
+├── app.js          --> Main server file
+├── package.json
 ├── models/
-│   └── user.js
-│
-├── public/
-│   ├── images/
-│   ├── javascripts/
-│   └── stylesheets/
-│       └── style.css
-│
+│   └── user.js     --> MongoDB user schema
 ├── views/
-│   ├── index.ejs        (Register)
-│   ├── login.ejs        (Login)
-│   ├── dashboard.ejs   (Protected)
-│   └── edit.ejs
-│
-├── app.js
-└── package.json
+│   ├── index.ejs   --> Registration page
+│   ├── login.ejs   --> Login page
+│   ├── dashboard.ejs --> Dashboard
+│   └── edit.ejs    --> Edit profile
+└── public/         --> For static files (optional, css/js/images)
 ```
 
-This structure follows MVC architecture principles.
+> Always keep models for database schemas and views for EJS templates.
 
-## Chapter 5: Database & User Model
+## Step 4: MongoDB Setup
 
-### 5.1 MongoDB Connection & Schema
+1. Make sure MongoDB is installed on your PC. If not:
 
-**models/user.js**
+   * [Download MongoDB](https://www.mongodb.com/try/download/community)
+   * Or use MongoDB Atlas (cloud DB)
+
+2. Connect MongoDB in `models/user.js`:
 
 ```js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-mongoose.connect('mongodb://127.0.0.1:27017/authtestapp');
+mongoose.connect("mongodb://127.0.0.1:27017/authtestapp")
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: String,
-    email: String,
+    email: { type: String, unique: true },
     password: String,
     age: Number
 });
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("User", userSchema);
 ```
 
-### Explanation
+* `unique: true` ensures no duplicate emails.
+* We export the model to use in `app.js`.
 
-* `Schema` defines **how user data is stored**
-* `Model` provides methods like:
 
-  * `create()`
-  * `findOne()`
-  * `findById()`
 
-## Chapter 6: User Registration Flow
+## Step 5: Create `app.js` (Main Server)
 
-### 6.1 Registration Page (`index.ejs`)
+Terminal:
 
-Purpose:
-
-* Collect user details
-* Send data to `/create`
-
-### 6.2 Registration Logic (Concept)
-
-**Steps:**
-
-1. User submits form
-2. Password is hashed using `bcrypt`
-3. User is saved in MongoDB
-4. JWT token is generated
-5. Token is stored in a cookie
-
-### Flow Diagram
-
-```
-Form → Server → Hash Password → Save User → Generate JWT → Cookie
+```bash
+touch app.js
 ```
 
-## Chapter 7: Password Hashing
+the following code 
 
-### Why Hash Passwords?
 
-* Plain text passwords are unsafe
-* Hashing ensures **data security**
 
-### bcrypt Concept
+### 1. Import dependencies and setup server
 
 ```js
-bcrypt.hash(password, saltRounds)
+const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const path = require("path");
+const User = require("./models/user"); // Import user model
+
+const app = express();
+const PORT = 3000;
+const JWT_SECRET = "mysecretkey"; // Secret key for JWT
 ```
 
-* Same password ≠ same hash
-* Cannot be reversed
 
-## Chapter 8: Login System
+### 2. Middleware
 
-### 8.1 Login Page (`login.ejs`)
+Middleware lets Express parse requests and cookies:
 
-Collects:
+```js
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Parse form data
+app.use(cookieParser()); // Parse cookies
+app.use(express.static(path.join(__dirname, "public"))); // Serve static files
 
-* Email
-* Password
-
-### 8.2 Login Logic (Concept)
-
-Steps:
-
-1. Find user by email
-2. Compare password using `bcrypt.compare`
-3. If valid:
-
-   * Generate JWT
-   * Store JWT in cookie
-4. Redirect to dashboard
-
-### Flow Diagram
-
-```
-Login → Email Check → Password Compare → JWT → Cookie → Dashboard
+// Set EJS as template engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 ```
 
-## Chapter 9: JWT Token & Cookies
 
-### 9.1 Token Creation
+### 3. Auth Middleware
 
-JWT contains:
+This checks if the user is logged in:
 
-* User ID
-* Email
+```js
+function isLoggedIn(req, res, next) {
+    const token = req.cookies.token;
+    if (!token) return res.redirect("/login");
 
-Signed using a secret key.
-
-### 9.2 Cookie Storage
-
-Why Cookies?
-
-* Automatically sent with requests
-* No need to store sessions on server
-* Stateless authentication
-
-## Chapter 10: Protected Routes
-
-### Dashboard Page (`dashboard.ejs`)
-
-This page is accessible only if JWT is valid.
-
-Displayed Data:
-
-* User ID
-* Username
-* Email
-
-### Authorization Logic
-
-```
-Request → Cookie → Verify JWT → Fetch User → Allow Access
+    try {
+        const data = jwt.verify(token, JWT_SECRET);
+        req.user = data; // Save user info in request
+        next();
+    } catch {
+        res.redirect("/login");
+    }
+}
 ```
 
-If token is invalid → redirect to login.
 
-## Chapter 11: Logout System
+### 4. Routes
 
-### Logout Logic
+a. Registration Page
 
-* Clear JWT cookie
-* Redirect to login page
-
-Result:
-
-> User is logged out securely
-
-
-# How to Run the Project
+```js
+app.get("/", (req, res) => {
+    res.render("index");
+});
 ```
-npm install
+
+b. Login Page
+
+```js
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+```
+
+c. Dashboard
+
+```js
+app.get("/dashboard", isLoggedIn, async (req, res) => {
+    const user = await User.findById(req.user.id);
+    res.render("dashboard", { user });
+});
+```
+
+d. Edit Profile
+
+```js
+app.get("/edit", isLoggedIn, async (req, res) => {
+    const user = await User.findById(req.user.id);
+    res.render("edit", { user });
+});
+```
+
+### 5. Registration POST Route
+
+```js
+app.post("/create", async (req, res) => {
+    const { username, email, password, age } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash password
+
+    const user = await User.create({
+        username,
+        email,
+        password: hashedPassword,
+        age
+    });
+
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
+
+    res.cookie("token", token, { httpOnly: true });
+    res.redirect("/dashboard");
+});
+```
+
+### 6. Login POST Route
+
+```js
+app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.send("User not found");
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.send("Wrong password");
+
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
+    res.cookie("token", token, { httpOnly: true });
+    res.redirect("/dashboard");
+});
+```
+
+### 7. Update Profile
+
+```js
+app.post("/edit/:id", isLoggedIn, async (req, res) => {
+    if (req.params.id !== req.user.id) {
+        return res.status(403).send("Unauthorized");
+    }
+
+    const { username, email, age } = req.body;
+    await User.findByIdAndUpdate(req.user.id, { username, email, age });
+
+    res.redirect("/dashboard");
+});
+```
+
+### 8. Logout Route
+
+```js
+app.post("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.redirect("/login");
+});
+```
+
+### 9. Start Server
+
+```js
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+```
+
+## Step 6: EJS Templates
+
+1.  `index.ejs` (Register Page)
+
+```html
+<form action="/create" method="post" class="card w-full max-w-md p-8 space-y-6">
+    <input name="username" placeholder="Username" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="password" type="password" placeholder="Password" required>
+    <input name="age" type="number" placeholder="Age" required>
+    <button>Create Account</button>
+    <a href="/login">Login</a>
+</form>
+```
+
+2. `login.ejs`
+
+```html
+<form action="/login" method="post" class="card w-full max-w-md p-8 space-y-6">
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="password" type="password" placeholder="Password" required>
+    <button>Login</button>
+    <a href="/">Register</a>
+</form>
+```
+
+3.  `dashboard.ejs`
+
+```html
+<h1>Welcome, <%= user.username %></h1>
+<p>Email: <%= user.email %></p>
+<p>Age: <%= user.age %></p>
+<a href="/edit">Edit Profile</a>
+<form action="/logout" method="post"><button>Logout</button></form>
+```
+
+4. `edit.ejs`
+
+```html
+<form action="/edit/<%= user._id %>" method="post">
+    <input name="username" value="<%= user.username %>">
+    <input name="email" value="<%= user.email %>">
+    <input name="age" value="<%= user.age %>">
+    <button>Save Changes</button>
+</form>
+<a href="/dashboard">Back to Dashboard</a>
+```
+
+> You can style all forms with TailwindCSS as in your original code.
+
+## Step 7: Run the Project
+
+1. Start MongoDB server (if local):
+
+```bash
+mongod
+```
+
+2. Start Node.js server:
+
+```bash
 node app.js
 ```
 
+or, if using nodemon:
 
-Open browser:
+```bash
+npx nodemon app.js
+```
 
-http://localhost:3000
+3. Open browser: [http://localhost:3000](http://localhost:3000)
+
+* You can register a new user → login → see dashboard → edit profile → logout.

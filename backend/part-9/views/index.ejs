@@ -1,83 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Account</title>
 
-    <!-- Tailwind CSS -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3b82f6",
+                        surface: "#18181b",
+                        card: "#27272a",
+                        danger: "#ef4444"
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="bg-zinc-900 text-white">
+<body class="bg-gradient-to-br from-zinc-900 via-black to-zinc-900 flex items-center justify-center min-h-screen text-white px-4">
 
-    <div class="w-full h-screen flex items-center justify-center">
+    <form action="/create" method="post" class="bg-card p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6">
 
-        <form 
-            action="/create" 
-            method="post"
-            class="w-full max-w-md bg-zinc-800 p-8 rounded-2xl shadow-xl space-y-5"
-        >
+        <h1 class="text-3xl font-bold text-center text-white">Create Account</h1>
+        <p class="text-center text-zinc-400">Join us in just one step</p>
 
-            <h2 class="text-2xl font-bold text-center">
-                Create Account
-            </h2>
+        <input type="text" name="username" placeholder="Username" required
+            class="w-full px-4 py-3 rounded-lg bg-surface border border-zinc-700 text-white focus:border-primary focus:ring-2 focus:ring-primary outline-none" />
+        <input type="email" name="email" placeholder="Email" required
+            class="w-full px-4 py-3 rounded-lg bg-surface border border-zinc-700 text-white focus:border-primary focus:ring-2 focus:ring-primary outline-none" />
+        <input type="password" name="password" placeholder="Password" required
+            class="w-full px-4 py-3 rounded-lg bg-surface border border-zinc-700 text-white focus:border-primary focus:ring-2 focus:ring-primary outline-none" />
+        <input type="number" name="age" placeholder="Age" required
+            class="w-full px-4 py-3 rounded-lg bg-surface border border-zinc-700 text-white focus:border-primary focus:ring-2 focus:ring-primary outline-none" />
 
-            <!-- Username -->
-            <input 
-                type="text" 
-                name="username"
-                placeholder="Username"
-                required
-                class="w-full px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-700 outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
-            />
+        <button type="submit"
+            class="w-full py-3 rounded-lg bg-primary hover:bg-blue-500 font-semibold transition">Create Account</button>
 
-            <!-- Email -->
-            <input 
-                type="email" 
-                name="email"
-                placeholder="Email"
-                required
-                class="w-full px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-700 outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
-            />
+        <p class="text-center text-sm text-zinc-400">
+            Already have an account?
+            <a href="/login" class="text-primary hover:underline">Login</a>
+        </p>
 
-            <!-- Password -->
-            <input 
-                type="password" 
-                name="password"
-                placeholder="Password"
-                required
-                class="w-full px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-700 outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
-            />
-
-            <!-- Age -->
-            <input 
-                type="number" 
-                name="age"
-                placeholder="Age"
-                required
-                class="w-full px-4 py-3 rounded-lg bg-zinc-900 border border-zinc-700 outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
-            />
-
-            <!-- Submit Button -->
-            <button 
-                type="submit"
-                class="w-full py-3 bg-blue-600 rounded-lg font-semibold hover:bg-blue-700 active:scale-95 transition"
-            >
-                Create User
-            </button>
-
-            <!-- Login Link -->
-            <p class="text-center text-sm text-zinc-400">
-                Already have an account?
-                <a href="/login" class="text-blue-500 hover:underline">
-                    Login
-                </a>
-            </p>
-
-        </form>
-
-    </div>
+    </form>
 
 </body>
 </html>

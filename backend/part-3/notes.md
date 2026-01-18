@@ -43,8 +43,6 @@ Example:
 npm uninstall one-liner-joke
 ```
 
----
-
 ### Installing a Specific Version
 
 Sometimes we need a specific version of a package:
@@ -62,8 +60,6 @@ npm uninstall accessibility
 ```
 
 (NPM automatically removes the installed version.)
-
----
 
 # Understanding node_modules
 
@@ -91,8 +87,6 @@ Example:
 npm i express
 ```
 
----
-
 # DevDependencies
 
 DevDependencies are packages used only during development.
@@ -100,7 +94,7 @@ DevDependencies are packages used only during development.
 * They help in testing, formatting, bundling, or development tools.
 * They are not required after the application is built and deployed.
 
-**Example:**
+Example:
 
 ```
 npm i nodemon --save-dev
@@ -114,19 +108,15 @@ npm i nodemon -D
 
 They are listed inside the `devDependencies` section of `package.json`.
 
----
-
 # Scripts – Understanding Default & Custom Scripts
 
-The **scripts** section in `package.json` is used to define **commands** that run automatically.
-
----
+The scripts section in `package.json` is used to define **commands** that run automatically.
 
 ## Default Scripts
 
 ### npm start
 
-* This is a **special default script**.
+* This is a special default script.
 * It runs without using `run`.
 * Used to start the application.
 
